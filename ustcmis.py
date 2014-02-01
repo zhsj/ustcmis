@@ -7,11 +7,11 @@ class USTCMis:
 
     def __init__(self):
         self.s = requests.Session()
-        self.login = False
+        self.login_status = False
 
     def get_check_code(self):
-        self.s.post(url + 'userinit.do', data={'userbz': 's'})
-        r = self.s.get(url + 'randomImage.do')
+        self.s.post(USTCMis.url + 'userinit.do', data={'userbz': 's'})
+        r = self.s.get(USTCMis.url + 'randomImage.do')
         img = r.content.encode('base64').replace('\n', '')
         return img
 
@@ -23,10 +23,10 @@ class USTCMis:
             'passWord': pwd,
             'check': check_code
             }
-        r = self.s.post(url + 'login.do', data=login_info)
+        r = self.s.post(USTCMis.url + 'login.do', data=login_info)
         if r.ok:
         #need fix
-            self.login = True
+            self.login_status = True
 
     def get_grade(self, semester):
         if self.login:
@@ -35,5 +35,5 @@ class USTCMis:
                 'px': 1,
                 'zd': 0
                 }
-            r = self.s.post(url + 'querycjxx.do', data=query_data)
+            r = self.s.post(USTCMis.url + 'querycjxx.do', data=query_data)
             return r.content
