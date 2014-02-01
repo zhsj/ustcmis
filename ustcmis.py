@@ -27,6 +27,7 @@ class USTCMis:
         if r.ok:
         #need fix
             self.login_status = True
+        return r
 
     def get_grade(self, semester):
         if self.login:
