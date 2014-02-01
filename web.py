@@ -39,9 +39,9 @@ def login():
     session['id'] = user_id
     return '''
         <form action="" method="post">
-            <p><input type=text name=user_code></p>
-            <p><input type=password name=pwd></p>
-            <p><input type=text name=check_code>
+            <p>User ID<input type=text name=user_code></p>
+            <p>Password<input type=password name=pwd></p>
+            <p>Captcha<input type=text name=check_code>
             <img src="data:image/jpeg;base64,%s"></p>
             <p><input type=submit value=Login></p>
         </form>
@@ -74,7 +74,8 @@ def get_grade():
             return content
         return '''
             <form action="" method="post">
-                <p><input type=text name=semester></p>
+                <p><input type=text name=semester value=20131></p>
+                <p>20131 means the first semester of 2013 school year</p>
                 <p><input type=submit value=Query></p>
             </form>
         '''
