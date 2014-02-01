@@ -24,17 +24,20 @@ class USTCMis:
             'check': check_code
             }
         r = self.s.post(USTCMis.url + 'login.do', data=login_info)
-        if r.ok:
-        #need fix
-            self.login_status = True
+        check_login()
         return r
 
+    def check_login(self):
+        r = self.s.get(USTCMis.url + 'left.do')
+        self.login_status = (r.text.find("个性化选课") != -1)
+        return self.login
+
     def get_grade(self, semester):
-        if self.login:
+        if check_login():
             query_data = {
                 'xuenian': semester,
                 'px': 1,
                 'zd': 0
                 }
             r = self.s.post(USTCMis.url + 'querycjxx.do', data=query_data)
-            return r.content
+            return r.text
