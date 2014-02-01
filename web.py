@@ -1,4 +1,4 @@
-# -*- coding: utf-8 *-*
+# -*- coding: utf-8 -*-
 from ustcmis import USTCMis
 from flask import Flask, session, redirect, url_for, escape, request
 import os
@@ -9,7 +9,7 @@ user = {}
 
 @app.route('/')
 def index():
-    if 'user' in session:
+    if check_login():
         return '''
             <p>Logged in as %s</p>
             <p><a href="%s">Grade</a></p>
@@ -49,22 +49,31 @@ def logout():
         user_id = session['id']
         user.pop(user_id, None)
     session.clear()
-    return redirect(url_for('index'))
+    return redirect(url_for('login'))
+
+
+def check_login():
+    if 'id' in session and 'user' in session:
+        if user[session['id']].check_login():
+            return True
+    return False
 
 
 @app.route('/grade', methods=['GET', 'POST'])
 def get_grade():
-    if request.method == 'POST' and 'user' in session:
-        user_id = session['id']
-        semester = request.form['semester']
-        content = user[user_id].get_grade(semester)
-        return content
-    return '''
-        <form action="" method="post">
-            <p><input type=text name=semester></p>
-            <p><input type=submit value=Query></p>
-        </form>
-    '''
+    if check_login():
+        if request.method == 'POST':
+            user_id = session['id']
+            semester = request.form['semester']
+            content = user[user_id].get_grade(semester)
+            return content
+        return '''
+            <form action="" method="post">
+                <p><input type=text name=semester></p>
+                <p><input type=submit value=Query></p>
+            </form>
+        '''
+    return redirect(url_for('login'))
 # set the secret key.  keep this really secret:
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 

@@ -1,4 +1,4 @@
-# -*- coding: utf-8 *-*
+# -*- coding: utf-8 -*-
 import requests
 
 
@@ -24,16 +24,16 @@ class USTCMis:
             'check': check_code
             }
         r = self.s.post(USTCMis.url + 'login.do', data=login_info)
-        check_login()
+        self.check_login()
         return r
 
     def check_login(self):
         r = self.s.get(USTCMis.url + 'left.do')
         self.login_status = (r.text.find("个性化选课") != -1)
-        return self.login
+        return self.login_status
 
     def get_grade(self, semester):
-        if check_login():
+        if self.check_login():
             query_data = {
                 'xuenian': semester,
                 'px': 1,
