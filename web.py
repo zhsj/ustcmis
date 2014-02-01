@@ -5,9 +5,10 @@ import random
 
 app = Flask(__name__)
 user = {}
+url_prefix = ''
 
 
-@app.route('/')
+@app.route(url_prefix + '/')
 def index():
     if check_login():
         return '''
@@ -18,7 +19,7 @@ def index():
     return redirect(url_for('login'))
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route(url_prefix + '/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST' and 'id' in session:
         user_id = session['id']
@@ -28,6 +29,7 @@ def login():
         pwd = request.form['pwd']
         check_code = request.form['check_code']
         user[user_id].login(user_code, pwd, check_code)
+        session['user'] = user_code
         return redirect(url_for('index'))
     if 'id' in session:
         user_id = session['id']
@@ -46,7 +48,7 @@ def login():
     ''' % user[user_id].get_check_code()
 
 
-@app.route('/logout')
+@app.route(url_prefix + '/logout')
 def logout():
     if 'id' in session:
         user_id = session['id']
@@ -62,7 +64,7 @@ def check_login():
     return False
 
 
-@app.route('/grade', methods=['GET', 'POST'])
+@app.route(url_prefix + '/grade', methods=['GET', 'POST'])
 def get_grade():
     if check_login():
         if request.method == 'POST':
