@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from ustcmis import USTCMis
 from flask import Flask, session, redirect, url_for, escape, request
-import os
+import random
 
 app = Flask(__name__)
 user = {}
@@ -22,14 +22,17 @@ def index():
 def login():
     if request.method == 'POST' and 'id' in session:
         user_id = session['id']
+        if user_id not in user:
+            return redirect(url_for('login'))
         user_code = request.form['user_code']
         pwd = request.form['pwd']
         check_code = request.form['check_code']
         user[user_id].login(user_code, pwd, check_code)
-        if user[user_id].login_status:
-            session['user'] = user_code
         return redirect(url_for('index'))
-    user_id = os.urandom(24)
+    if 'id' in session:
+        user_id = session['id']
+    else:
+        user_id = str(int(random.random() * 1e16))
     user[user_id] = USTCMis()
     session['id'] = user_id
     return '''
