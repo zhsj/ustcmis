@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import requests
+from bs4 import BeautifulSoup
 
 
 class USTCMis:
@@ -29,7 +30,7 @@ class USTCMis:
 
     def check_login(self):
         r = self.s.get(USTCMis.url + 'left.do')
-        self.login_status = (r.text.find("个性化选课") != -1)
+        self.login_status = (r.text.encode('utf-8').find("个性化选课") != -1)
         return self.login_status
 
     def get_grade(self, semester):
@@ -40,4 +41,14 @@ class USTCMis:
                 'zd': 0
                 }
             r = self.s.post(USTCMis.url + 'querycjxx.do', data=query_data)
-            return r.text
+            soup = BeautifulSoup(r.text)
+            tb_content = ''
+            for table in soup.find_all('table'):
+                tr_content = ''
+                for tr in table.find_all('tr'):
+                    td_content = ''
+                    for td in tr.find_all('td'):
+                        td_content += '<td>' + td.string.strip() + '</td>'
+                    tr_content += '<tr>' + td_content + '</tr>'
+                tb_content += '<table>' + tr_content + '</table>'
+            return tb_content

@@ -54,7 +54,7 @@ def logout():
 
 def check_login():
     if 'id' in session and 'user' in session:
-        if user[session['id']].check_login():
+        if session['id'] in user and user[session['id']].check_login():
             return True
     return False
 
