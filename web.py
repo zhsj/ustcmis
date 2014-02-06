@@ -14,10 +14,10 @@ def index():
         return '''
             <p>Logged in as %s</p>
             <p><a href="%s">Grade</a></p>
-            <p><a href="%s">Timetable</a></p>
+            <p><a href="%s">iCalendar file for 2014 Spring Semester</a></p>
             <p><a href="%s">Logout</a></p>
         ''' % (session['user'], url_for('api_get_grade'),
-        url_for('api_get_timetable'), url_for('logout'))
+        url_for('get_ical'), url_for('logout'))
     return redirect(url_for('login'))
 
 
