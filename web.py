@@ -59,11 +59,15 @@ def logout():
     return redirect(url_for('login'))
 
 
-@app.route(url_prefix + '/ical.ics')
+@app.route(url_prefix + '/ical.ics', methods=['GET', 'POST'])
 def get_ical():
     if check_login():
+        try:
+            semester = request.values['semester']
+        except:
+            semester = '20132'
         user_id = session['id']
-        icalendar = user[user_id].get_ical()
+        icalendar = user[user_id].get_ical(semester)
         if icalendar != 'error':
             return current_app.response_class(icalendar,
                 mimetype='text/calendar')
@@ -116,7 +120,7 @@ def api_get_timetable():
         try:
             semester = request.values['semester']
         except:
-            semester = '20131'
+            semester = '20132'
         user_id = session['id']
         return json_return(user[user_id].get_timetable(semester))
     return json_return({'error': 'Not Login'})

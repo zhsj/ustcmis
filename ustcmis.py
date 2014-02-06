@@ -182,7 +182,7 @@ class USTCMis:
             content[i][u'上课时间地点'] = decode_place_time(mess)
         return content
 
-    def get_ical(self, semester='20132'):
+    def get_ical(self, semester):
         if not self.check_login():
             return 'error'
         classes = self.get_timetable(semester)
