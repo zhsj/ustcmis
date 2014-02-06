@@ -14,4 +14,4 @@ flask
 
 ## Demo
 
-[http://zsj.freeshell.ustc.edu.cn](http://zsj.freeshell.ustc.edu.cn)
+[http://zsj.freeshell.ustc.edu.cn/mis](http://zsj.freeshell.ustc.edu.cn/mis)
