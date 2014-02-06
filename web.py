@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 from ustcmis import USTCMis
-from flask import Flask, session, redirect, url_for, request, json,\
+from flask import Flask, Blueprint, session, redirect, url_for, request, json,\
                     current_app, render_template
 import random
 
 app = Flask(__name__)
-app.config["APPLICATION_ROOT"] = ''
+ustcmis = Blueprint('ustcmis', __name__, template_folder='templates',
+                    static_folder='static', url_prefix='')
 user = {}
 
 
-@app.route('/')
+@ustcmis.route('/')
 def index():
     if 'id' in session:
         user_id = session['id']
@@ -26,29 +27,29 @@ def index():
     return render_template('index.html', login=login, img=img)
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@ustcmis.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST' and 'id' in session:
         user_id = session['id']
         if user_id not in user:
-            return redirect(url_for('login'))
+            return redirect(url_for('.login'))
         user_code = request.form['user_code']
         pwd = request.form['pwd']
         check_code = request.form['check_code']
         user[user_id].login(user_code, pwd, check_code)
-    return redirect(url_for('index'))
+    return redirect(url_for('.index'))
 
 
-@app.route('/logout')
+@ustcmis.route('/logout')
 def logout():
     if 'id' in session:
         user_id = session['id']
         user.pop(user_id, None)
     session.clear()
-    return redirect(url_for('index'))
+    return redirect(url_for('.index'))
 
 
-@app.route('/ical.ics', methods=['GET', 'POST'])
+@ustcmis.route('/ical.ics', methods=['GET', 'POST'])
 def get_ical():
     if check_login():
         try:
@@ -64,12 +65,12 @@ def get_ical():
 
 
 # API
-@app.route('/api/login', methods=['GET', 'POST'])
+@ustcmis.route('/api/login', methods=['GET', 'POST'])
 def api_login():
     if request.method == 'POST' and 'id' in session:
         user_id = session['id']
         if user_id not in user:
-            return redirect(url_for('login'))
+            return redirect(url_for('.login'))
         user_code = request.form['user_code']
         pwd = request.form['pwd']
         check_code = request.form['check_code']
@@ -90,7 +91,7 @@ def api_login():
     # return json_return({'img_base64': img})
 
 
-@app.route('/api/grade', methods=['GET', 'POST'])
+@ustcmis.route('/api/grade', methods=['GET', 'POST'])
 def api_get_grade():
     if check_login():
         try:
@@ -102,7 +103,7 @@ def api_get_grade():
     return json_return({'error': 'Not Login'})
 
 
-@app.route('/api/timetable', methods=['GET', 'POST'])
+@ustcmis.route('/api/timetable', methods=['GET', 'POST'])
 def api_get_timetable():
     if check_login():
         try:
@@ -129,5 +130,7 @@ def check_login():
 # set the secret key.  keep this really secret:
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 
+app.register_blueprint(ustcmis)
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True)
+    app.run()

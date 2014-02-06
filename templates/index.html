@@ -4,14 +4,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>USTC MIS Tools</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('.static', filename='style.css') }}">
 </head>
 <body>
 <div class="container">
     <h1>USTC MIS Tools</h1>
     {% if not login %}
     <div class="login-form">
-        <form class="form-horizontal" role="form" action="{{ url_for('login') }}" method="post">
+        <form class="form-horizontal" role="form" action="{{ url_for('.login') }}" method="post">
             <span class="help-block">
                 Please use the student id and password on http://mis.teach.ustc.edu.cn to login
             </span>
@@ -48,7 +48,7 @@
         <dl>
             <dt><h3>Grade</h3></dt>
             <dd>
-                <form class="form-inline" role="form" action="{{ url_for('api_get_grade') }}" method="post">
+                <form class="form-inline" role="form" action="{{ url_for('.api_get_grade') }}" method="post">
                     <select name="semester" class="form-control">
                         <option value="">ALL Semester</option>
                         <option value="20131">2013 Fall Semester</option>
@@ -58,7 +58,7 @@
             </dd>
             <dt><h3>Timetable</h3></dt>
             <dd>
-                <form class="form-inline" role="form" action="{{ url_for('api_get_timetable') }}" method="post">
+                <form class="form-inline" role="form" action="{{ url_for('.api_get_timetable') }}" method="post">
                     <select name="semester" class="form-control">
                         <option value="20132">2014 Spring Semester</option>
                     </select>
@@ -67,7 +67,7 @@
             </dd>
             <dd>
                 <p></p>
-                <p>Or <a href="{{ url_for('get_ical') }}">Download</a> a iCal File of Current Semeter</p>
+                <p>Or <a href="{{ url_for('.get_ical') }}">Download</a> a iCal File of Current Semeter</p>
                 <p><a href="http://en.wikipedia.org/wiki/ICalendar">What is iCal File</a></p>
                 <p>iCal File can be imported to Calendar Software, for example, Google Calendar, Apple Calendar, etc</p>
             </dd>
