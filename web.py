@@ -5,11 +5,11 @@ from flask import Flask, session, redirect, url_for, request, json,\
 import random
 
 app = Flask(__name__)
+app.config["APPLICATION_ROOT"] = ''
 user = {}
-url_prefix = ''
 
 
-@app.route(url_prefix + '/')
+@app.route('/')
 def index():
     if 'id' in session:
         user_id = session['id']
@@ -26,7 +26,7 @@ def index():
     return render_template('index.html', login=login, img=img)
 
 
-@app.route(url_prefix + '/login', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST' and 'id' in session:
         user_id = session['id']
@@ -39,7 +39,7 @@ def login():
     return redirect(url_for('index'))
 
 
-@app.route(url_prefix + '/logout')
+@app.route('/logout')
 def logout():
     if 'id' in session:
         user_id = session['id']
@@ -48,7 +48,7 @@ def logout():
     return redirect(url_for('index'))
 
 
-@app.route(url_prefix + '/ical.ics', methods=['GET', 'POST'])
+@app.route('/ical.ics', methods=['GET', 'POST'])
 def get_ical():
     if check_login():
         try:
@@ -64,7 +64,7 @@ def get_ical():
 
 
 # API
-@app.route(url_prefix + '/api/login', methods=['GET', 'POST'])
+@app.route('/api/login', methods=['GET', 'POST'])
 def api_login():
     if request.method == 'POST' and 'id' in session:
         user_id = session['id']
@@ -90,7 +90,7 @@ def api_login():
     # return json_return({'img_base64': img})
 
 
-@app.route(url_prefix + '/api/grade', methods=['GET', 'POST'])
+@app.route('/api/grade', methods=['GET', 'POST'])
 def api_get_grade():
     if check_login():
         try:
@@ -102,7 +102,7 @@ def api_get_grade():
     return json_return({'error': 'Not Login'})
 
 
-@app.route(url_prefix + '/api/timetable', methods=['GET', 'POST'])
+@app.route('/api/timetable', methods=['GET', 'POST'])
 def api_get_timetable():
     if check_login():
         try:
