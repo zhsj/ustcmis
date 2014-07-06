@@ -133,13 +133,24 @@ class USTCMis:
             'passWord': pwd,
             'check': check_code
             }
-        r = self.s.post(USTCMis.url + 'login.do', data=login_info)
+        self.s.post(USTCMis.url + 'login.do', data=login_info)
         return self.check_login()
 
     def check_login(self):
         r = self.s.get(USTCMis.url + 'init_xk_ts.do')
         self.login_status = (r.text.find(u'所在院系') != -1)
         return self.login_status
+
+    def get_grade_semester_list(self):
+        if not self.check_login():
+            return {'error': 'Not Login'}
+        r = self.s.get(USTCMis.url + 'initquerycjxx.do')
+        soup = BeautifulSoup(r.text)
+        content = []
+        options = soup.find_all('option')
+        for i in options:
+            content.append([i.attrs['value'], i.text])
+        return content
 
     def get_grade(self, semester=''):
         if not self.check_login():

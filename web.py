@@ -22,10 +22,12 @@ def index():
     login = user[user_id].check_login()
     if not login:
         img = user[user_id].get_check_code().encode('base64').replace('\n', '')
+        return render_template('index.html', login=login, img=img)
     else:
         img = ''
-    return render_template('index.html', login=login, img=img)
-
+        grade_semester_list = user[user_id].get_grade_semester_list()
+        return render_template('index.html', login=login, grade_semester_list =
+                               grade_semester_list)
 
 @ustcmis.route('/login', methods=['GET', 'POST'])
 def login():
@@ -133,4 +135,5 @@ app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 app.register_blueprint(ustcmis)
 
 if __name__ == '__main__':
+    app.debug = True
     app.run()
