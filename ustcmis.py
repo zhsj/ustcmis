@@ -11,6 +11,8 @@ def decode_place_time(mess):
     mess = mess.split(';')
     for item in mess:
         item = item.split(u'：')
+        if len(item) < 2:
+            return {}
         place = item[0]
         if item[1].startswith(u'单') or item[1].startswith(u'双'):
             other = item[1][0] + u'周'
