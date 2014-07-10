@@ -21,10 +21,8 @@ def index():
         user[user_id] = USTCMis()
     login = user[user_id].check_login()
     if not login:
-        img = user[user_id].get_check_code().encode('base64').replace('\n', '')
-        return render_template('index.html', login=login, img=img)
+        return render_template('index.html', login=login)
     else:
-        img = ''
         grade_semester_list = user[user_id].get_grade_semester_list()
         return render_template('index.html', login=login, grade_semester_list=
                 grade_semester_list)
@@ -38,8 +36,7 @@ def login():
             return redirect(url_for('.login'))
         user_code = request.form['user_code']
         pwd = request.form['pwd']
-        check_code = request.form['check_code']
-        user[user_id].login(user_code, pwd, check_code)
+        user[user_id].login(user_code, pwd)
     return redirect(url_for('.index'))
 
 
@@ -76,8 +73,7 @@ def api_login():
             return redirect(url_for('.login'))
         user_code = request.form['user_code']
         pwd = request.form['pwd']
-        check_code = request.form['check_code']
-        status = user[user_id].login(user_code, pwd, check_code)
+        status = user[user_id].login(user_code, pwd)
         if status:
             return json_return({'user': user_code})
         else:
@@ -88,10 +84,7 @@ def api_login():
         user_id = str(int(random.random() * 1e16))
     user[user_id] = USTCMis()
     session['id'] = user_id
-    img = user[user_id].get_check_code()
-    return current_app.response_class(img, mimetype='image/jpeg')
-    #img = user[user_id].get_check_code().encode('base64').replace('\n', '')
-    # return json_return({'img_base64': img})
+    return json_return({'error': 'Not Login'})
 
 
 @ustcmis.route('/api/grade', methods=['GET', 'POST'])

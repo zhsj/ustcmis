@@ -2,6 +2,7 @@
 import requests
 from bs4 import BeautifulSoup
 from datetime import date, timedelta
+from newknn import Captcha
 
 weeks_name = dict(zip(range(1, 8), ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU']))
 
@@ -120,6 +121,7 @@ class USTCMis:
     def __init__(self):
         self.s = requests.Session()
         self.login_status = False
+        self.captcha = Captcha()
 
     def get_check_code(self):
         self.s.post(USTCMis.url + 'userinit.do', data={'userbz': 's'})
@@ -127,7 +129,9 @@ class USTCMis:
         img = r.content
         return img
 
-    def login(self, user_code, pwd, check_code):
+    def login(self, user_code, pwd):
+        img = self.get_check_code()
+        check_code = self.captcha.hack(img)
         login_info = {
             'userbz': 's',
             'hidjym': '',
