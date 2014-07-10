@@ -4,13 +4,13 @@
 
 ## require
 
-python 2.7
+* python 2.7
+* request
+* beautifulsoup4
+* flask
+* opencv
+* numpy
 
-request
-
-beautifulsoup4
-
-flask
 
 ## Demo
 
