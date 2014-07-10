@@ -26,8 +26,9 @@ def index():
     else:
         img = ''
         grade_semester_list = user[user_id].get_grade_semester_list()
-        return render_template('index.html', login=login, grade_semester_list =
-                               grade_semester_list)
+        return render_template('index.html', login=login, grade_semester_list=
+                grade_semester_list)
+
 
 @ustcmis.route('/login', methods=['GET', 'POST'])
 def login():
