@@ -3,6 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 from datetime import date, timedelta
 from newknn import Captcha
+import random
 
 weeks_name = dict(zip(range(1, 8), ['MO', 'TU', 'WE', 'TH', 'FR', 'SA', 'SU']))
 
@@ -140,7 +141,12 @@ class USTCMis:
             'check': check_code
             }
         self.s.post(USTCMis.url + 'login.do', data=login_info)
-        return self.check_login()
+        self.check_login()
+        if not self.login_status:
+            filename = str(random.randint(1,1000)) + check_code + ".jpg"
+            with open(filename, 'w') as f:
+                f.write(img)
+        return self.login_status
 
     def check_login(self):
         r = self.s.get(USTCMis.url + 'init_xk_ts.do')
