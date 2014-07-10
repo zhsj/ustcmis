@@ -15,7 +15,7 @@ class Captcha:
                 label.append(ord(i))
                 #print y
                 train_file.append(collect_dir + '/' + i + '/' + y)
-        train_data = [cv2.imread(i, cv2.IMREAD_GRAYSCALE) for i in train_file]
+        train_data = [cv2.imread(i, 0) for i in train_file]
         train = np.array(train_data).reshape(-1, 400).astype(np.float32)
         label = np.array(label).reshape(-1)
         self.knn = cv2.KNearest()
