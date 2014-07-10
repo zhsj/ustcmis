@@ -119,10 +119,11 @@ class USTCMis:
         '20132': [date(2014, 2, 17), date(2014, 6, 20)]
         }
 
+    captcha = Captcha()
+
     def __init__(self):
         self.s = requests.Session()
         self.login_status = False
-        self.captcha = Captcha()
 
     def get_check_code(self):
         self.s.post(USTCMis.url + 'userinit.do', data={'userbz': 's'})
@@ -154,7 +155,7 @@ class USTCMis:
         return self.login_status
 
     def get_grade_semester_list(self):
-        if not self.check_login():
+        if not self.login_status or not self.check_login():
             return {'error': 'Not Login'}
         r = self.s.get(USTCMis.url + 'initquerycjxx.do')
         soup = BeautifulSoup(r.text)
@@ -165,7 +166,7 @@ class USTCMis:
         return content
 
     def get_grade(self, semester=''):
-        if not self.check_login():
+        if not self.login_status or not self.check_login():
             return {'error': 'Not Login'}
         query_data = {
             'xuenian': semester,
@@ -189,7 +190,7 @@ class USTCMis:
         return content
 
     def get_timetable(self, semester):
-        if not self.check_login():
+        if not self.login_status or not self.check_login():
             return {'error': 'Not Login'}
         query_data = {'selxnxq': semester}
         r = self.s.post(USTCMis.url + 'xkjgquery.do?tjfs=1', data=query_data)
@@ -206,7 +207,7 @@ class USTCMis:
         return content
 
     def get_ical(self, semester):
-        if not self.check_login():
+        if not self.login_status or not self.check_login():
             return 'error'
         classes = self.get_timetable(semester)
         return ical(classes, USTCMis.class_day_time, USTCMis.semester_date,
