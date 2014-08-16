@@ -152,6 +152,7 @@ class USTCMis:
         self.check_login()
         if not self.login_status:
             filename = str(random.randint(1,1000)) + check_code + ".jpg"
+            print filename
             with open(filename, 'w') as f:
                 f.write(img)
         return self.login_status
