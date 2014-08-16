@@ -24,8 +24,9 @@ def index():
         return render_template('index.html', login=login)
     else:
         grade_semester_list = user[user_id].get_grade_semester_list()
+        timetable_semester_list = user[user_id].get_timetable_semester_list()
         return render_template('index.html', login=login, grade_semester_list=
-                grade_semester_list)
+                grade_semester_list, timetable_semester_list=timetable_semester_list)
 
 
 @ustcmis.route('/login', methods=['GET', 'POST'])

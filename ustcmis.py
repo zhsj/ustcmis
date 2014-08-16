@@ -116,7 +116,13 @@ class USTCMis:
         '13': ['211000', '215500']
         }
     semester_date = {
-        '20132': [date(2014, 2, 17), date(2014, 6, 20)]
+        '20121': [date(2012, 9, 3), date(2013, 1, 25)],
+        '20122': [date(2013,2, 25), date(2013, 6, 28)],
+        '20123': [date(2013, 7, 1), date(2013, 8, 9)],
+        '20131': [date(2013, 9, 2), date(2014, 1, 17)],
+        '20132': [date(2014, 2, 17), date(2014, 6, 20)],
+        '20133': [date(2014, 6, 23), date(2014, 8, 1)],
+        '20141': [date(2014, 9, 1), date(2015, 1, 30)]
         }
 
     captcha = Captcha()
@@ -125,6 +131,7 @@ class USTCMis:
         self.s = requests.Session()
         self.login_status = False
 
+    # Login
     def get_check_code(self):
         self.s.post(USTCMis.url + 'userinit.do', data={'userbz': 's'})
         r = self.s.get(USTCMis.url + 'randomImage.do')
@@ -154,6 +161,7 @@ class USTCMis:
         self.login_status = (r.text.find(u'所在院系') != -1)
         return self.login_status
 
+    # Grade
     def get_grade_semester_list(self):
         if not self.login_status or not self.check_login():
             return {'error': 'Not Login'}
@@ -189,6 +197,19 @@ class USTCMis:
         content['detail'] = detail
         return content
 
+    # Timetable
+    def get_timetable_semester_list(self):
+        if not self.login_status or not self.check_login():
+            return {'error': 'Not Login'}
+        r = self.s.get(USTCMis.url + 'initxkjgquery.do')
+        soup = BeautifulSoup(r.text)
+        content = []
+        options = soup.find_all('option')
+        for i in options:
+            if len(i.attrs['value']):
+                content.append([i.attrs['value'], i.text])
+        return content
+
     def get_timetable(self, semester):
         if not self.login_status or not self.check_login():
             return {'error': 'Not Login'}
@@ -212,3 +233,25 @@ class USTCMis:
         classes = self.get_timetable(semester)
         return ical(classes, USTCMis.class_day_time, USTCMis.semester_date,
                     semester)
+
+    # Class Operation
+    def insert_class(self, param_str):
+        param_key = ['tag', 'actionname', 'xnxq', 'kcid', 'kcbjbh', 'kclb',
+                     'kcsx', 'sjpdm', 'kssjdm', 'cxck', 'zylx', 'gxkfl',
+                     'xlh', 'qsz', 'jzz']
+        param_list = param_str.split(',')
+        param = dict(zip(param_key,param_list))
+        data = {
+            "xnxq": param.get('xnxq'),
+            "kcbjbh": param.get('kcbjbh'),
+            "kcid": param.get('kcid'),
+            "kclb": param.get('kclb'),
+            "kcsx": param.get('kcsx'),
+            "cxck": param.get('cxck'),
+            "zylx": param.get('zylx'),
+            "gxkfl": param.get('gxkfl'),
+            "xlh": param.get('xlh'),
+            "sjpdm": param.get('sjpdm'),
+            "kssjdm": param.get('kssjdm')
+        }
+        self.s.get(USTCMis.url + 'xkgcinsert.do',data=data)
