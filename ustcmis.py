@@ -80,8 +80,11 @@ END:VEVENT
     events = ''
     for index, items in classes.iteritems():
         for i, item in items[u'上课时间地点'].iteritems():
-            firstday = next_weekday(semester_date[semester][0],
+            try:
+                firstday = next_weekday(semester_date[semester][0],
                                     int(item['week']) - 1).strftime('%Y%m%d')
+            except:
+                continue
             info = {
                 'class_firstday': firstday,
                 'class_start_time': class_day_time[item['class_no']][0],
