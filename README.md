@@ -11,6 +11,7 @@
 * opencv
 * numpy
 
+Opencv and numpy is used to auto recognize the captcha.
 
 ## Demo
 
